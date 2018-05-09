@@ -1,10 +1,12 @@
 # MOKICK content proxy for JavaScript
 
-MOKICK runtime templates embedding HTML using an `<iframe>` provide read data access and communication APIs to the iframe content window. This paper describes how to do it from the iframe content window perspective.
+MOKICK is the elearning authoring tool developed at [https://bayerundpreuss.com](https://bayerundpreuss.com) and used by Bayer und Preuss customers.
+
+HTML content, embedded within an MOKICK runtime, can read data and communicate with the MOKICK web application using a small set of APIs provided and injected by the MOKICK runtime. This paper describes how to use it from within the iframe content window.
 
 ## Basics
 
-The communication bridge and it's API is provided by an JavaScript object that will be injected from the parent MOKICK runtime into the `<iframe>` content window. Do not assume it's already available, use a loop to detect it!
+The communication bridge and it's API is provided by an JavaScript object that will be injected from the parent MOKICK runtime into the `<iframe>` content window. Please do not assume it's already available, use a loop to detect it!
 
 We refer to the injected JavaScript object as "MOKICK content proxy".
 
