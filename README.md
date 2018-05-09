@@ -1,20 +1,20 @@
 # MOKICK content proxy for JavaScript
 
-MOKICK runtime templates embedding HTML using an `<iframe>` provide read data access and communication APIs to the iframes content window. This paper describes how to do it from the iframe content window perspective.
+MOKICK runtime templates embedding HTML using an `<iframe>` provide read data access and communication APIs to the iframe content window. This paper describes how to do it from the iframe content window perspective.
 
 ## Basics
 
-The communication bridge and it's api is provided by an javascript object that will be injected from the parent MOKICK runtime into the `<iframe>` content window. Do not assume it's already available, use a loop to detect it!
+The communication bridge and it's API is provided by an JavaScript object that will be injected from the parent MOKICK runtime into the `<iframe>` content window. Do not assume it's already available, use a loop to detect it!
 
-We refer to the injected javascript object as MOKICK content proxy.
+We refer to the injected JavaScript object as "MOKICK content proxy".
 
-If the javascript object (MOKICK content proxy) is available, read access to data is immediately possible.
+If the JavaScript object (MOKICK content proxy) is available, read access to data is immediately possible.
 
-Since MOKICK runtimes usually provide complex content handling, navigation and interactions, it's very important to optimize performance within the `<iframe>` as well. Therefore MOKICK uses an basic content lifecycle and it's strongly recommended to use the provided handling for initialization, activation, deactivation and finalization!
+Since MOKICK runtimes usually provide complex content handling, navigation and interactions, it's very important to optimize performance within the `<iframe>` content window as well. Therefore MOKICK uses an basic content lifecycle and it's strongly recommended to use the provided handling for initialization, activation, deactivation and finalization!
 
 ## Detection
 
-In order to use the MOKICK content proxy communication bridge we first need to wait until it exists. So use an interval or any kind of asynchronous loop to check if an object named `mokickContentProxySetFromParentWindow` exists in the `<iframe>` window object. We use this very long name to avoid any conflicts with your existing code and recommend you assign the object to you own local variable to enable minification:
+In order to use the MOKICK content proxy we first need to wait until it exists. So use an interval or any kind of asynchronous loop to check if an object named `mokickContentProxySetFromParentWindow` exists in the `<iframe>` window object. We use this very long name to avoid any conflicts with your existing code and recommend you assign the object to you own local variable to enable minification:
 
 ```js
 // Detect (closure compiler save)
@@ -26,9 +26,9 @@ if ( mokickContentProxyExists ) { // Start your logic and stop your detection lo
 
 ## Read data
 
-MOKICK content proxy provides read access to text values (strings) and media files using very basic api calls.
+MOKICK content proxy provides read access to text values (strings) and media files using very basic API calls.
 
-Since MOKICK has support for responsive images, different media formats and sizes built in, access to media files is split into two steps. First we need to access available IDs which can be used to access a list of all available variants of a specific media (again, different file formats or sizes).
+Since MOKICK has support for responsive images, different media formats and sizes built in, access to media files is split into two steps. First we need to access available IDs which then can be used to access a list of all available variants of a specific media (again, different file formats or sizes).
 
 ## API
 
@@ -49,7 +49,7 @@ if ( audioIds != null ) {
 
 ### getAudioSourceObjects( audioId )
 
-Returns an array of all audios source objects for the `audioId`. If the `audioId` doesn't exist or no urls are available, this function returns `null`.
+Returns an array of all audio source objects for an `audioId`. If the `audioId` doesn't exist or no urls are available, this function returns `null`.
 
 Each audio source object contains these fields:
 
