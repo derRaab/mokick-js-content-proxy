@@ -1,6 +1,6 @@
 # MOKICK content proxy for JavaScript
 
-MOKICK runtime templates embedding HTML using `<iframe>` can read data and communicate with the main runtime. This paper describes how to do it.
+MOKICK runtime templates embedding HTML using an `<iframe>` provide read data access and communication APIs to the iframes content window. This paper describes how to do it from the iframe content window perspective.
 
 ## Basics
 
