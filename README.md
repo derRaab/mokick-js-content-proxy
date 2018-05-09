@@ -116,6 +116,19 @@ if ( bitmapSourceObjects != null ) {
 }
 ```
 
+### getMediaAlternativeText( id )
+
+Returns the alternative text for a media (audio, bitmap, video) `id`. If no alternative text is available, this function returns an empty string `""`.
+
+```js
+// EXAMPLE: Log available alternative text
+var mediaId = "Audio ID received by api call";
+var alternativeText = mokickContentProxy.getMediaAlternativeText( mediaId );
+if ( 0 < alternativeText.length ) {
+  console.log( alternativeText );
+}
+```
+
 ### getStrings()
 
 Returns an array containing all strings directly linked to this `<iframe>`. If no strings are linked, this function returns `null`.
@@ -173,6 +186,23 @@ if ( videoSourceObjects != null ) {
     console.log( sourceObject["seconds"] );
   }
 }
+```
+
+### setSize( width, height )
+
+Set the size of this `<iframe>`. Implementations differ on platforms and might be supported partially or not at all. Make sure to register proper resize handling.
+
+```js
+// EXAMPLE: Set custom size and compare result
+var customWidth = 200;
+var customHeight = 100;
+window.addEventListener( "resize", function( event ) {
+  var actualWidth = window.innerWidth;
+  var actualHeight = window.innerHeight;
+  console.log( "Width custom:" + customWidth + " vs. actual:" + actualWidth );
+  console.log( "Height custom:" + customHeight + " vs. actual:" + actualHeight );
+});
+mokickContentProxy.setSize( customWidth, customHeight );
 ```
 
 
