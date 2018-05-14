@@ -18,21 +18,26 @@ Since MOKICK runtimes usually provide complex content handling, navigation and i
 
 In order to use the MOKICK content proxy we first need to wait until it exists. So use an interval or any kind of asynchronous loop to check if an object named `mokickContentProxySetFromParentWindow` exists in the `<iframe>` window object. We use this very long name to avoid any conflicts with your existing code and recommend you assign the object to you own local variable to enable minification.
 
-We recommend using this little snipped. You provide an success callback which receives the detected MOKICK content proxy as soon as available:
+We recommend using this little method. It just expects an success callback which then receives the detected MOKICK content proxy:
 
 ```js
 /* EXAMPLE: Detect mokick content proxy and send it to success callback */
 var detectMokickContentProxy = function( successCallback ) {
-
-	var mokickContentProxy = window[ "mokickContentProxySetFromParentWindow" ];
-	if ( typeof mokickContentProxy == "object" ) {
-
-		if ( typeof successCallback == "function" ) {
-			successCallback( mokickContentProxy );
+	
+	var detect = function() {
+	
+		var mokickContentProxy = window[ "mokickContentProxySetFromParentWindow" ];
+		if ( typeof mokickContentProxy == "object" ) {
+		
+			if ( typeof successCallback == "function" ) {
+				successCallback( mokickContentProxy );
+			}
+			return;
 		}
-		return;
+		
+		window.requestAnimationFrame( detect );
 	}
-	window.requestAnimationFrame( detectMokickContentProxy );
+	detect();
 }
 ```
 
@@ -53,6 +58,16 @@ detectMokickContentProxy( function ( mokickContentProxy ) {
 	console.log( mokickContentProxy.getStrings() );
 } );
 ```
+For more details and examples please refer to these read data API methods:
+
+- `getAudioIds()`
+- `getAudioSourceObjects()`
+- `getBitmapIds()`
+- `getBitmapSourceObjects()`
+- `getMediaAlternativeText()`
+- `getStrings()`
+- `getVideoIds()`
+- `getVideoSourceObjects()`
 
 ## API
 
