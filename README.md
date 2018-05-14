@@ -2,7 +2,7 @@
 
 MOKICK is the elearning authoring tool developed at [https://bayerundpreuss.com](https://bayerundpreuss.com) and used by Bayer und Preuss customers.
 
-HTML content, embedded within an MOKICK runtime, can read data and communicate with the MOKICK web application using a small set of APIs provided and injected by the MOKICK runtime. This paper describes how to use it from within the iframe content window.
+HTML content, embedded within a MOKICK runtime, can read data and communicate with the MOKICK web application using a small set of APIs provided and injected by the MOKICK runtime. This paper describes how to use it from within the iframe content window.
 
 ## Basics
 
