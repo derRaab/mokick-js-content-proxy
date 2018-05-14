@@ -16,21 +16,43 @@ Since MOKICK runtimes usually provide complex content handling, navigation and i
 
 ## Detection
 
-In order to use the MOKICK content proxy we first need to wait until it exists. So use an interval or any kind of asynchronous loop to check if an object named `mokickContentProxySetFromParentWindow` exists in the `<iframe>` window object. We use this very long name to avoid any conflicts with your existing code and recommend you assign the object to you own local variable to enable minification:
+In order to use the MOKICK content proxy we first need to wait until it exists. So use an interval or any kind of asynchronous loop to check if an object named `mokickContentProxySetFromParentWindow` exists in the `<iframe>` window object. We use this very long name to avoid any conflicts with your existing code and recommend you assign the object to you own local variable to enable minification.
+
+We recommend using this little snipped. You provide an success callback which receives the detected MOKICK content proxy as soon as available:
 
 ```js
-// Detect (closure compiler save)
-var mokickContentProxy = window["mokickContentProxySetFromParentWindow"];
-var mokickContentProxyExists = ( mokickContentProxy != null );
+/* EXAMPLE: Detect mokick content proxy and send it to success callback */
+var detectMokickContentProxy = function( successCallback ) {
 
-if ( mokickContentProxyExists ) { // Start your logic and stop your detection loop }
+	var mokickContentProxy = window[ "mokickContentProxySetFromParentWindow" ];
+	if ( typeof mokickContentProxy == "object" ) {
+
+		if ( typeof successCallback == "function" ) {
+			successCallback( mokickContentProxy );
+		}
+		return;
+	}
+	window.requestAnimationFrame( detectMokickContentProxy );
+}
 ```
+
+Please note: We use this simple detection method in all following examples.
+
 
 ## Read data
 
 MOKICK content proxy provides read access to text values (strings) and media files using very basic API calls.
 
 Since MOKICK has support for responsive images, different media formats and sizes built in, access to media files is split into two steps. First we need to access available IDs which then can be used to access a list of all available variants of a specific media (again, different file formats or sizes).
+
+This is the most basic string access example:
+
+```js
+// Example: Log all strings on detection success
+detectMokickContentProxy( function ( mokickContentProxy ) {
+	console.log( mokickContentProxy.getStrings() );
+} );
+```
 
 ## API
 
