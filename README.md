@@ -23,21 +23,17 @@ We recommend using this little method. It just expects an success callback which
 ```js
 /* EXAMPLE: Detect mokick content proxy and send it to success callback */
 var detectMokickContentProxy = function( successCallback ) {
-	
-	var detect = function() {
-	
-		var mokickContentProxy = window[ "mokickContentProxySetFromParentWindow" ];
-		if ( typeof mokickContentProxy == "object" ) {
-		
-			if ( typeof successCallback == "function" ) {
-				successCallback( mokickContentProxy );
-			}
-			return;
-		}
-		
-		window.requestAnimationFrame( detect );
-	}
-	detect();
+  var detect = function() {
+    var mokickContentProxy = window[ "mokickContentProxySetFromParentWindow" ];
+    if ( typeof mokickContentProxy == "object" ) {
+      if ( typeof successCallback == "function" ) {
+        successCallback( mokickContentProxy );
+      }
+      return;
+    }	
+    window.requestAnimationFrame( detect );
+  }
+  detect();
 }
 ```
 
@@ -55,7 +51,7 @@ This is the most basic string access example:
 ```js
 // Example: Log all strings on detection success
 detectMokickContentProxy( function ( mokickContentProxy ) {
-	console.log( mokickContentProxy.getStrings() );
+  console.log( mokickContentProxy.getStrings() );
 } );
 ```
 For more details and examples please refer to these read data API methods:
