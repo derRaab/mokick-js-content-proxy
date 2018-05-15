@@ -239,7 +239,7 @@ var setup = function ( mokickContentProxy ) {
   var audioElement = null;
   
   /* Create audio element and set initialized if metadata loaded. If no audio available set initialized immediately. */
-  var initializeCallback = function ( mokickContentProxy ) {
+  var initialize = function ( mokickContentProxy ) {
     var audioIds = mokickContentProxy.getAudioIds();
     if ( audioIds != null && 0 < audioIds.length ) {
       var audioId = audioIds[ 0 ];
@@ -266,7 +266,7 @@ var setup = function ( mokickContentProxy ) {
   };
   
   /* Autoplay on activation and set activated. */
-  var activateCallback = function ( mokickContentProxy ) {
+  var activate = function ( mokickContentProxy ) {
     if ( audioElement != null ) {
       audioElement.play();
     }
@@ -274,7 +274,7 @@ var setup = function ( mokickContentProxy ) {
   };
 
   /* Pause on deactivation and set deactivate. */
-  var deactivateCallback = function ( mokickContentProxy ) {
+  var deactivate = function ( mokickContentProxy ) {
     if ( audioElement != null ) {
       audioElement.pause();
     }
@@ -282,12 +282,12 @@ var setup = function ( mokickContentProxy ) {
   };
   
   /* Clear audio reference and set finalized. */
-  var finalizeCallback = function ( mokickContentProxy ) {
+  var finalize = function ( mokickContentProxy ) {
     audioElement = null;
     mokickContentProxy.setFinalized();
   };
   
-  mokickContentProxy.registerCallbacks( initializeCallback, activateCallback, deactivateCallback, finalizeCallback );
+  mokickContentProxy.registerCallbacks( initialize, activate, deactivate, finalize );
 }
 detectMokickContentProxy( setup );
 ```
