@@ -225,10 +225,10 @@ if ( videoSourceObjects != null ) {
 
 Registers callbacks for content lifecycle handling. Each callback is optional - fallback behaviour exists. If you provide a callback, make sure to call the corresponding completion method whenever ready. See arguments for more details:
 
-- `initializeCallback` - Method will be called when initialization should happen. Make sure to call `setInitialized()` when done.
-- `activateCallback` - Method will be called when activation should happen. Make sure to call `setActivated()` when done.
-- `deactivateCallback` - Method will be called when deactivation should happen. Make sure to call `setDeactivated()` when done.
-- `finalizeCallback` - Method will be called when finalization should happen. Make sure to call `setFinalized()` when done.
+- `initializeCallback` - Called when initialization should happen. Make sure to call `setInitialized()` when done.
+- `activateCallback` - Called when activation should happen. Make sure to call `setActivated()` when done.
+- `deactivateCallback` - Called when deactivation should happen. Make sure to call `setDeactivated()` when done.
+- `finalizeCallback` - Called when finalization should happen. Make sure to call `setFinalized()` when done.
 
 Please note: While initialization and finalization happen just once, activation and deactivation might happen multiple times (in correct order). For example: Content might fade to the background and will therefore be deactivated, but later fade to the foreground again and then activated again.
 
