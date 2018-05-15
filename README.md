@@ -21,7 +21,7 @@ In order to use the MOKICK content proxy we first need to wait until it exists. 
 We recommend using this little method. It just expects an success callback which then receives the detected MOKICK content proxy:
 
 ```js
-/* EXAMPLE: Detect mokick content proxy and send it to success callback */
+/* Detect mokick content proxy and send it to success callback */
 var detectMokickContentProxy = function( successCallback ) {
   var detect = function() {
     var mokickContentProxy = window[ "mokickContentProxySetFromParentWindow" ];
@@ -49,7 +49,7 @@ Since MOKICK has support for responsive images, different media formats and size
 This is the most basic string access example:
 
 ```js
-// Example: Log all strings on detection success
+/* Log all strings on detection success */
 detectMokickContentProxy( function ( mokickContentProxy ) {
   console.log( mokickContentProxy.getStrings() );
 } );
@@ -72,7 +72,7 @@ For more details and examples please refer to these read data API methods:
 Returns an array containing all audio IDs directly linked to this `<iframe>`. If no audios are linked, this function returns `null`.
 
 ```js
-// EXAMPLE: Log all available audio ids
+/* Log all available audio ids */
 var audioIds = mokickContentProxy.getAudioIds();
 if ( audioIds != null ) {
   var c = audioIds.length;
@@ -93,7 +93,7 @@ Each audio source object contains these fields:
 - `seconds` (Number - duration in seconds)
 
 ```js
-// EXAMPLE: Log all available audio object data
+/* Log all available audio object data */
 var audioId = "Audio ID received by api call";
 var audioSourceObjects = mokickContentProxy.getAudioSourceObjects( audioId );
 if ( audioSourceObjects != null ) {
@@ -112,7 +112,7 @@ if ( audioSourceObjects != null ) {
 Returns an array containing all bitmap IDs directly linked to this `<iframe>`. If no bitmaps are linked, this function returns `null`.
 
 ```js
-// EXAMPLE: Log all available bitmap ids
+/* Log all available bitmap ids */
 var bitmapIds = mokickContentProxy.getBitmapIds();
 if ( bitmapIds != null ) {
   var c = bitmapIds.length;
@@ -134,7 +134,7 @@ Each bitmap source object contains these fields:
 - `height` (Number - height in pixel)
 
 ```js
-// EXAMPLE: Log all available bitmap object data
+/* Log all available bitmap object data */
 var bitmapId = "Bitmap ID received by api call";
 var bitmapSourceObjects = mokickContentProxy.getBitmapSourceObjects( bitmapId );
 if ( bitmapSourceObjects != null ) {
@@ -154,7 +154,7 @@ if ( bitmapSourceObjects != null ) {
 Returns the alternative text for a media (audio, bitmap, video) `id`. If no alternative text is available, this function returns an empty string `""`.
 
 ```js
-// EXAMPLE: Log available alternative text
+/* Log available alternative text */
 var mediaId = "Audio ID received by api call";
 var alternativeText = mokickContentProxy.getMediaAlternativeText( mediaId );
 if ( 0 < alternativeText.length ) {
@@ -167,7 +167,7 @@ if ( 0 < alternativeText.length ) {
 Returns an array containing all strings directly linked to this `<iframe>`. If no strings are linked, this function returns `null`.
 
 ```js
-// EXAMPLE: Log all available strings
+/* Log all available strings */
 var strings = mokickContentProxy.getStrings();
 if ( strings != null ) {
   var c = strings.length;
@@ -182,7 +182,7 @@ if ( strings != null ) {
 Returns an array containing all video IDs directly linked to this `<iframe>`. If no videos are linked, this function returns `null`.
 
 ```js
-// EXAMPLE: Log all available video ids
+/* Log all available video ids */
 var videoIds = mokickContentProxy.getVideoIds();
 if ( videoIds != null ) {
   var c = videoIds.length;
@@ -205,7 +205,7 @@ Each video source object contains these fields:
 - `seconds` (Number - duration in seconds)
 
 ```js
-// EXAMPLE: Log all available video object data
+/* Log all available video object data */
 var videoId = "Video ID received by api call";
 var videoSourceObjects = mokickContentProxy.getVideoSourceObjects( videoId );
 if ( videoSourceObjects != null ) {
@@ -221,12 +221,79 @@ if ( videoSourceObjects != null ) {
 }
 ```
 
+### registerCallbacks( initializeCallback, activateCallback, deactivateCallback, finalizeCallback )
+
+Registers callbacks for content lifecycle handling. Each callback is optional - fallback behaviour exists. If you provide a callback, make sure to call the corresponding completion method whenever ready. See arguments for more details:
+
+- `initializeCallback` - Method will be called when initialization should happen. Make sure to call `setInitialized()` when done.
+- `activateCallback` - Method will be called when activation should happen. Make sure to call `setActivated()` when done.
+- `deactivateCallback` - Method will be called when deactivation should happen. Make sure to call `setDeactivated()` when done.
+- `finalizeCallback` - Method will be called when finalization should happen. Make sure to call `setFinalized()` when done.
+
+Please note: While initialization and finalization happen just once, activation and deactivation might happen multiple times (in correct order). For example: Content might fade to the background and will therefore be deactivated, but later fade to the foreground again and then activated again.
+
+
+```js
+/* Load audio metadata on initialize, autoplay on activate and pause on deactivate. */
+var setup = function ( mokickContentProxy ) {
+  var audioElement = null;
+    /* Create audio element and set initialized if metadata loaded. If no audio available set initialized immediately. */
+    var initializeCallback = function ( mokickContentProxy ) {
+      var audioIds = mokickContentProxy.getAudioIds();
+      if ( audioIds != null && 0 < audioIds.length ) {
+        var audioId = audioIds[ 0 ];
+        var sourceObjects = mokickContentProxy.getAudioSourceObjects( audioId );
+        if ( sourceObjects != null ) {
+          audioElement = document.createElement( "audio" );
+          audioElement.setAttribute( "controls", "true" );
+          audioElement.addEventListener( "loadedmetadata", function( e ) {
+            mokickContentProxy.setInitialized();
+          });
+          var c = sourceObjects.length;
+          for ( var i = 0; i < c; i++ ) {
+            var sourceObject = sourceObjects[ i ];
+            var sourceElement = document.createElement( "source" );
+            sourceElement.setAttribute( "type", sourceObject.mime );
+            sourceElement.setAttribute( "src", sourceObject.url );
+            audioElement.appendChild( sourceElement );
+          }
+          document.body.appendChild( audioElement );
+            return;
+          }
+          mokickContentProxy.setInitialized();
+        }
+      };
+    /* Autoplay on activation and set activated. */
+    var activateCallback = function ( mokickContentProxy ) {
+      if ( audioElement != null ) {
+        audioElement.play();
+      }
+      mokickContentProxy.setActivated();
+    };
+    /* Pause on deactivation and set deactivate. */
+    var deactivateCallback = function ( mokickContentProxy ) {
+      if ( audioElement != null ) {
+        audioElement.pause();
+      }
+      mokickContentProxy.setDeactivated();
+    };
+    /* Clear audio reference and set finalized. */
+    var finalizeCallback = function ( mokickContentProxy ) {
+      audioElement = null;
+      mokickContentProxy.setFinalized();
+    };
+    mokickContentProxy.registerCallbacks( initializeCallback, activateCallback, deactivateCallback, finalizeCallback );
+}
+detectMokickContentProxy( setup );
+```
+
+
 ### setSize( width, height )
 
 Set the size of this `<iframe>`. Implementations differ on platforms and might be supported partially or not at all. Make sure to register proper resize handling.
 
 ```js
-// EXAMPLE: Set custom size and compare result
+/* Set custom size and compare result */
 var customWidth = 200;
 var customHeight = 100;
 window.addEventListener( "resize", function( event ) {
