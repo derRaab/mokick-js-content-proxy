@@ -237,52 +237,57 @@ Please note: While initialization and finalization happen just once, activation 
 /* Load audio metadata on initialize, autoplay on activate and pause on deactivate. */
 var setup = function ( mokickContentProxy ) {
   var audioElement = null;
-    /* Create audio element and set initialized if metadata loaded. If no audio available set initialized immediately. */
-    var initializeCallback = function ( mokickContentProxy ) {
-      var audioIds = mokickContentProxy.getAudioIds();
-      if ( audioIds != null && 0 < audioIds.length ) {
-        var audioId = audioIds[ 0 ];
-        var sourceObjects = mokickContentProxy.getAudioSourceObjects( audioId );
-        if ( sourceObjects != null ) {
-          audioElement = document.createElement( "audio" );
-          audioElement.setAttribute( "controls", "true" );
-          audioElement.addEventListener( "loadedmetadata", function( e ) {
-            mokickContentProxy.setInitialized();
-          });
-          var c = sourceObjects.length;
-          for ( var i = 0; i < c; i++ ) {
-            var sourceObject = sourceObjects[ i ];
-            var sourceElement = document.createElement( "source" );
-            sourceElement.setAttribute( "type", sourceObject.mime );
-            sourceElement.setAttribute( "src", sourceObject.url );
-            audioElement.appendChild( sourceElement );
-          }
-          document.body.appendChild( audioElement );
-            return;
-          }
+  
+  /* Create audio element and set initialized if metadata loaded. If no audio available set initialized immediately. */
+  var initializeCallback = function ( mokickContentProxy ) {
+    var audioIds = mokickContentProxy.getAudioIds();
+    if ( audioIds != null && 0 < audioIds.length ) {
+      var audioId = audioIds[ 0 ];
+      var sourceObjects = mokickContentProxy.getAudioSourceObjects( audioId );
+      if ( sourceObjects != null ) {
+        audioElement = document.createElement( "audio" );
+        audioElement.setAttribute( "controls", "true" );
+        audioElement.addEventListener( "loadedmetadata", function( e ) {
           mokickContentProxy.setInitialized();
+        });
+        var c = sourceObjects.length;
+        for ( var i = 0; i < c; i++ ) {
+          var sourceObject = sourceObjects[ i ];
+          var sourceElement = document.createElement( "source" );
+          sourceElement.setAttribute( "type", sourceObject.mime );
+          sourceElement.setAttribute( "src", sourceObject.url );
+          audioElement.appendChild( sourceElement );
         }
-      };
-    /* Autoplay on activation and set activated. */
-    var activateCallback = function ( mokickContentProxy ) {
-      if ( audioElement != null ) {
-        audioElement.play();
+        document.body.appendChild( audioElement );
+        return;
       }
-      mokickContentProxy.setActivated();
-    };
-    /* Pause on deactivation and set deactivate. */
-    var deactivateCallback = function ( mokickContentProxy ) {
-      if ( audioElement != null ) {
-        audioElement.pause();
-      }
-      mokickContentProxy.setDeactivated();
-    };
-    /* Clear audio reference and set finalized. */
-    var finalizeCallback = function ( mokickContentProxy ) {
-      audioElement = null;
-      mokickContentProxy.setFinalized();
-    };
-    mokickContentProxy.registerCallbacks( initializeCallback, activateCallback, deactivateCallback, finalizeCallback );
+      mokickContentProxy.setInitialized();
+    }
+  };
+  
+  /* Autoplay on activation and set activated. */
+  var activateCallback = function ( mokickContentProxy ) {
+    if ( audioElement != null ) {
+      audioElement.play();
+    }
+    mokickContentProxy.setActivated();
+  };
+
+  /* Pause on deactivation and set deactivate. */
+  var deactivateCallback = function ( mokickContentProxy ) {
+    if ( audioElement != null ) {
+      audioElement.pause();
+    }
+    mokickContentProxy.setDeactivated();
+  };
+  
+  /* Clear audio reference and set finalized. */
+  var finalizeCallback = function ( mokickContentProxy ) {
+    audioElement = null;
+    mokickContentProxy.setFinalized();
+  };
+  
+  mokickContentProxy.registerCallbacks( initializeCallback, activateCallback, deactivateCallback, finalizeCallback );
 }
 detectMokickContentProxy( setup );
 ```
