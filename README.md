@@ -65,6 +65,16 @@ For more details and examples please refer to these read data API methods:
 - `getVideoIds()`
 - `getVideoSourceObjects()`
 
+## Use content lifecycle
+
+To ensure optimal performance register your own handlers using the method:
+
+- `registerCallbacks()`
+
+See the full example in the API documentation.
+
+
+
 ## API
 
 ### getAudioIds()
