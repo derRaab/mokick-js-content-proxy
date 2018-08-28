@@ -74,12 +74,12 @@ MOKICK projects are built upon an hierarchical address system for content organi
 
 MOKICK content proxy provides access to the full project structure and an easy way to navigate to available addresses.
 
-This is the most basic string access example:
+This is the most basic access example:
 
 ```js
-/* Log all strings on detection success */
+/* Log all addresses on detection success */
 detectMokickContentProxy( function ( mokickContentProxy ) {
-  console.log( mokickContentProxy.getAddresses() );
+  console.log( mokickContentProxy.getAddresses( true ) );
 } );
 ```
 
