@@ -10,7 +10,7 @@ The communication bridge and it's API is provided by an JavaScript object that w
 
 We refer to the injected JavaScript object as "MOKICK content proxy".
 
-If the JavaScript object (MOKICK content proxy) is available, read access to data is immediately possible.
+If the JavaScript object (MOKICK content proxy) is available, read access to data and address system is immediately possible.
 
 Since MOKICK runtimes usually provide complex content handling, navigation and interactions, it's very important to optimize performance within the `<iframe>` content window as well. Therefore MOKICK uses an basic content lifecycle and it's strongly recommended to use the provided handling for initialization, activation, deactivation and finalization!
 
@@ -37,7 +37,7 @@ var detectMokickContentProxy = function( successCallback ) {
 }
 ```
 
-Please note: We use this simple detection method in all following examples.
+Please note: We use this simple detection method just in the first two examples. Feel free to implement your own logic.
 
 
 ## Read data
@@ -65,6 +65,35 @@ For more details and examples please refer to these read data API methods:
 - `getVideoIds()`
 - `getVideoSourceObjects()`
 
+
+## Structure and Navigation
+
+MOKICK projects are built upon an hierarchical address system for content organisation. Each address could hold content or exist just for structuring purposes.
+
+**Important: `""` (string with length 0) is the root address.**
+
+MOKICK content proxy provides access to the full project structure and an easy way to navigate to available addresses.
+
+This is the most basic string access example:
+
+```js
+/* Log all strings on detection success */
+detectMokickContentProxy( function ( mokickContentProxy ) {
+  console.log( mokickContentProxy.getAddresses() );
+} );
+```
+
+For more details and examples please refer to these read data API methods:
+
+- `getAddress()`
+- `getAddressChildren()`
+- `getAddressContentType()`
+- `getAddresses()`
+- `getAddressLabel()`
+- `getSelectedAddress()`
+- `setSelectedAddress()`
+
+
 ## Use content lifecycle
 
 To ensure optimal performance register your own handlers using the method:
@@ -76,6 +105,81 @@ See the full example in the API documentation.
 
 
 ## API
+
+### getAddress()
+
+Returns the address of `this` context (iframe). `""` (string with zero length) is the root address. `null` means not available.
+
+```js
+/* Log address of this context */
+var address = mokickContentProxy.getAddress();
+var addressAvailable = ( address !== null );
+if ( addressAvailable ) {
+  console.log( "Context address is '" + address + "'"  );
+}
+```
+
+### getAddressChildren( address )
+
+Returns an array containing all direct address children for an `address`. If the given `address` doesn't have children the array is empty. If the given `address` doesn't exist, this function returns `null`.
+
+```js
+/* Log address children of address "chapters" */
+var address = "chapters";
+var addressChilden = mokickContentProxy.getAddressChildren( address );
+var addressExists = ( addressChilden !== null );
+if ( addressExists ) {
+  var childCount = addressChilden.length;
+  var hasChildren = ( 0 < childCount );
+  if ( hasChildren ) {
+    console.log( "Address '" + address + "' has " + childCount + " children: " + addressChilden );
+  }
+  else {
+    console.log( "Address '" + address + "' has no children" );
+  }
+}
+```
+
+### getAddressContentType( address )
+
+Returns the content type for an `address`. If the given `address` doesn't exist or has no content assigned, this function returns `""`.
+
+```js
+/* Log the content type of address "chapter-1" */
+var address = "chapter-1";
+var contentType = mokickContentProxy. getAddressContentType( address );
+var addressExists = ( contentType !== null );
+if ( addressExists ) {
+  console.log( "Address '" + address + "' has content '" + contentType + "'" );
+}
+```
+
+### getAddresses( includeAddressesWithoutContent )
+
+Returns an array containing all available addresses. Setting `includeAddressesWithoutContent` to `true` will include all, `false` will filter addresses with content only.
+
+```js
+/* Log all available addresses */
+var addresses = mokickContentProxy.getAddresses( true );
+var addressesAvailable = ( addresses !== null );
+if ( addressesAvailable ) {
+  console.log( addresses.length + " addresses available: " + addresses );
+}
+```
+
+### getAddressLabel( address )
+
+Returns the label for an `address`. If the given `address` doesn't exist, this function returns `""`.
+
+```js
+/* Log the label of address "chapters" */
+var address = "chapters";
+var label = mokickContentProxy.getAddressLabel( address );
+var addressExists = ( label !== null );
+if ( addressExists ) {
+  console.log( "Address '" + address + "' has label '" + label + "'" );
+}
+```
 
 ### getAudioIds()
 
@@ -169,6 +273,19 @@ var mediaId = "Audio ID received by api call";
 var alternativeText = mokickContentProxy.getMediaAlternativeText( mediaId );
 if ( 0 < alternativeText.length ) {
   console.log( alternativeText );
+}
+```
+
+### getSelectedAddress()
+
+Returns the currently selected address. `""` (string with zero length) is the root address. This address is NOT the address of `this` context (iframe) (see `getAddress()` instead). `null` means not available.
+
+```js
+/* Log address of this context and also consider root address */
+var address = mokickContentProxy. getSelectedAddress();
+var addressAvailable = ( address !== null );
+if ( addressAvailable ) {
+  console.log( "Selected address is '" + address + "'"  );
 }
 ```
 
@@ -300,6 +417,16 @@ var setup = function ( mokickContentProxy ) {
   mokickContentProxy.registerCallbacks( initialize, activate, deactivate, finalize );
 }
 detectMokickContentProxy( setup );
+```
+
+### setSelectedAddress( address )
+
+Sets the currently selected address. `""` (string with zero length) is the root address.
+
+```js
+/* Navigate to chapter 1 */
+var address = "chapters/chapter-1";
+mokickContentProxy.setSelectedAddress( address );
 ```
 
 
