@@ -4,6 +4,8 @@ MOKICK is the elearning authoring tool developed at [https://bayerundpreuss.com]
 
 HTML content, embedded within a MOKICK runtime, can read data and communicate with the MOKICK web application using a small set of APIs provided and injected by the MOKICK runtime. This paper describes how to use it from within the iframe content window.
 
+**Please note that not every MOKICK runtime supports every function. Contact us for further informations!**
+
 ## Basics
 
 The communication bridge and it's API is provided by an JavaScript object that will be injected from the parent MOKICK runtime into the `<iframe>` content window. Please do not assume it's already available, use a loop to detect it!
@@ -347,6 +349,15 @@ if ( videoSourceObjects != null ) {
   }
 }
 ```
+
+### pauseParentMedia()
+
+Pause all possible media playing in the parent context. Usually called before you start your own media.
+
+```js
+mokickContentProxy. pauseParentMedia();
+```
+
 
 ### registerCallbacks( initializeCallback, activateCallback, deactivateCallback, finalizeCallback )
 
