@@ -355,7 +355,7 @@ if ( videoSourceObjects != null ) {
 Pause all possible media playing in the parent context. Usually called before you start your own media.
 
 ```js
-mokickContentProxy. pauseParentMedia();
+mokickContentProxy.pauseParentMedia();
 ```
 
 
