@@ -64,6 +64,8 @@ For more details and examples please refer to these read data API methods:
 - `getBitmapSourceObjects()`
 - `getMediaAlternativeText()`
 - `getStrings()`
+- `getTextHtml()`
+- `getTextIds()`
 - `getVideoIds()`
 - `getVideoSourceObjects()`
 
@@ -302,6 +304,67 @@ if ( strings != null ) {
   var c = strings.length;
   for ( var i = 0; i < c; i++ ) {
     console.log( strings[ i ] );
+  }
+}
+```
+
+### getTextHtml( textId )
+
+Returns XHTML compatible syntax representing the text content including additional css classes. E.g:
+
+```html
+<div class="text-container 
+            element-children element-children--4
+            h2-children h2-children--1
+            p-children p-children--2
+            ul-children ul-children--1
+            ">
+  <h2 class="h2--0 element--0">Headline text 0</h2>
+  <p class="p--0 element--1">Paragraph 1</p>
+  <ul class="li-children li-children--2 ul--0 element--2">
+    <li class="li--0">List Item 1</li>
+    <li class="li--1">List Item 2</li>
+  </ul>
+  <p class="p--1 element--3">Paragraph 2</p>
+</div>
+```
+If any problem occured during creation this fallback will be created:
+
+```html
+<div class="text-container text-container--error">
+  <h2>Error</h2>
+  <p>Creating text container for id "USED_ID" was not possible.</p>
+</div>
+```
+So make sure you check for the css class `text-container--error`.
+
+```js
+/* Render a text html block */
+var textId = "Text ID received by api call";
+var textHtml = mokickContentProxy.getTextHtml( textId );
+var tmpDiv = document.createElement( "DIV" );
+    tmpDiv.innerHTML = textHtml;
+var textDiv = tmpDiv.firstElementChild;
+var errored = textDiv.classList.contains( "text-container--error" );
+if ( errored ) {
+ console.warn( textHtml );
+}
+else {
+ document.body.appendChild( textDiv );
+}
+```
+
+### getTextIds()
+
+Returns an array containing all text IDs directly linked to this `<iframe>`. If no texts are linked, this function returns `null`.
+
+```js
+/* Log all available text ids */
+var textIds = mokickContentProxy.getTextIds();
+if ( textIds != null ) {
+  var c = textIds.length;
+  for ( var i = 0; i < c; i++ ) {
+    console.log( textIds[ i ] );
   }
 }
 ```
